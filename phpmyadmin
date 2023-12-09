@@ -1,10 +1,25 @@
 version: '3.1'
 
 services:
-  phpmyadmin:
-    image: phpmyadmin
+  mariadb:
+    image: mariadb
     restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: developer
+    networks:
+      - backend
+
+  phpmyadmin:
+    container_name: my-web-container
+    image: phpmyadmin
+    restart: unless-stopped
     ports:
       - 8080:80
     environment:
-      - PMA_ARBITRARY=1
+      - PMA_HOST=mariadb
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
